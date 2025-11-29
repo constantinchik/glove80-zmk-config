@@ -32,6 +32,38 @@ To locate your firmware files and reflash your Glove80...
 3. Select the desired workflow run in the centre area of the page (based on date and time of the build you wish to use). You can also start a new build from this page by clicking the "Run workflow" button.
 4. After clicking the desired workflow run, you should be presented with a section at the bottom of the page called "Artifacts". This section contains the results of your build, in a file called "glove80.uf2"
 5. Download the glove80.uf2
-6. Flash the firmware to Glove80 according to the user documentation on the official Glove80 Glove80 Support website (linked above)
+
+## Flashing Firmware to Glove80
+
+**Prerequisites:**
+- USB-C cable
+- The downloaded `glove80.uf2` firmware file
+- A backup input device (spare keyboard or on-screen keyboard)
+
+**NOTE:** The firmware must be flashed to both halves of the keyboard separately.
+
+### Flashing the Right Half
+
+1. **Connect the right half**: Plug the USB-C cable into the **right** half of your Glove80 and connect it to your computer.
+
+2. **Enter bootloader mode**: Use one of these methods:
+   - Press `Magic + '` (single-quote) on the default layout, OR
+   - Use the physical bootloader method: Hold the two furthest upper left keys (C6R6 + C3R3) while powering on the keyboard
+
+3. **Verify bootloader mode**: Look for a slow pulsing red LED next to the power switch. A USB Mass Storage Device named `GLV80RHBOOT` will appear on your computer.
+
+4. **Copy firmware**: Drag and drop (or copy) the `glove80.uf2` file onto the USB Mass Storage Device. The device will automatically disconnect once the firmware is successfully flashed.
+
+### Flashing the Left Half
+
+5. **Connect the left half**: Unplug the cable from the right half, then plug it into the **left** half of your Glove80.
+
+6. **Enter bootloader mode**: Use one of these methods:
+   - Press `Magic + Esc` on the default layout, OR
+   - Use the physical bootloader method: Hold the two furthest upper right keys while powering on the keyboard
+
+7. **Verify and flash**: A USB Mass Storage Device named `GLV80LHBOOT` will appear. Copy the same `glove80.uf2` file to this device.
+
+8. **Finalize**: After both halves are flashed, if you changed the firmware version, perform a configuration factory reset and re-pair the halves.
 
 Your keyboard is now ready to use.
