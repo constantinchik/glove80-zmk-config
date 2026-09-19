@@ -44,8 +44,8 @@ an exact commit for reproducible firmware builds.
 
 - **Base:** `Magic+G` cycles through Off, Aurora, Fire, Pacifica, Forest, Party,
   and Colorloop/Stripe Flow. The selected mood is saved across power cycles.
-- **Lower:** amber media/numpad keys, cyan navigation keys, and a white layer key.
-- **Magic:** unchanged; no custom layer map is applied to the system layer.
+- **Lower:** amber media controls, cyan navigation/numpad keys, and a white layer key.
+- **Magic:** no custom layer map; existing system controls remain, with `Magic+I` added for idle auto-off.
 - **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
   `W`, `A`, `S`, and `D` on this layer. Escape is red, Space is green, and
   Control is purple. The physical Grave, Tab, Caps Lock, and Shift keys produce
@@ -53,12 +53,16 @@ an exact commit for reproducible firmware builds.
 - **Lower Gaming:** number controls light amber while the physical `E/S/D/F`
   anchors remain cyan.
 
+On both Lower layers, the right-side numpad is cyan, keypad Enter is green,
+keypad Equals is white, and Print Screen is red.
+
 Aurora and RGB power are the firmware defaults after a configuration reset.
 Layer indicators are independent of the selected Base mood: Gaming and Lower
 Gaming always use the same functional colors, including when Base is set to
 Off. RGB brightness remains controlled by the normal Magic-layer controls.
 LEDs automatically turn off after 30 seconds of idle time to reduce battery
-drain.
+drain. `Magic+I` toggles this idle auto-off behavior, and the preference is
+saved across power cycles. The regular RGB power toggle remains separate.
 
 When changing between firmware versions, flash the same combined UF2 to both
 halves and follow MoErgo's configuration reset and re-pair procedure. To roll

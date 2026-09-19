@@ -11,8 +11,66 @@ index 73042f1..13126e6 100644
  
  config ZMK_RGB_UNDERGLOW_ON_START
      bool "RGB underglow starts on by default"
+diff --git a/app/include/dt-bindings/zmk/rgb.h b/app/include/dt-bindings/zmk/rgb.h
+index 657ac2f..1d17f69 100644
+--- a/app/include/dt-bindings/zmk/rgb.h
++++ b/app/include/dt-bindings/zmk/rgb.h
+@@ -20,6 +20,7 @@
+ #define RGB_EFS_CMD 13
+ #define RGB_COLOR_HSB_CMD 14
+ #define RGB_STATUS_CMD 15
++#define RGB_ATOG_CMD 16
+ 
+ #define RGB_TOG RGB_TOG_CMD 0
+ #define RGB_ON RGB_ON_CMD 0
+@@ -35,6 +36,7 @@
+ #define RGB_EFF RGB_EFF_CMD 0
+ #define RGB_EFR RGB_EFR_CMD 0
+ #define RGB_STATUS RGB_STATUS_CMD 0
++#define RGB_ATOG RGB_ATOG_CMD 0
+ #define RGB_COLOR_HSB_VAL(h, s, v) (((h) << 16) + ((s) << 8) + (v))
+ #define RGB_COLOR_HSB(h, s, v) RGB_COLOR_HSB_CMD##(RGB_COLOR_HSB_VAL(h, s, v))
+ #define RGB_COLOR_HSV RGB_COLOR_HSB
+\ No newline at end of file
+diff --git a/app/include/zmk/rgb_underglow.h b/app/include/zmk/rgb_underglow.h
+index f00dcd5..5306586 100644
+--- a/app/include/zmk/rgb_underglow.h
++++ b/app/include/zmk/rgb_underglow.h
+@@ -13,6 +13,7 @@ struct zmk_led_hsb {
+ };
+ 
+ int zmk_rgb_underglow_toggle(void);
++int zmk_rgb_underglow_toggle_auto_off(void);
+ int zmk_rgb_underglow_get_state(bool *state);
+ int zmk_rgb_underglow_on(void);
+ int zmk_rgb_underglow_off(void);
+diff --git a/app/src/behaviors/behavior_rgb_underglow.c b/app/src/behaviors/behavior_rgb_underglow.c
+index 2576486..79bf756 100644
+--- a/app/src/behaviors/behavior_rgb_underglow.c
++++ b/app/src/behaviors/behavior_rgb_underglow.c
+@@ -86,6 +86,11 @@ static const struct behavior_parameter_value_metadata no_arg_values[] = {
+         .type = BEHAVIOR_PARAMETER_VALUE_TYPE_VALUE,
+         .value = RGB_EFR_CMD,
+     },
++    {
++        .display_name = "Toggle Idle Auto-Off",
++        .type = BEHAVIOR_PARAMETER_VALUE_TYPE_VALUE,
++        .value = RGB_ATOG_CMD,
++    },
+ };
+ 
+ static const struct behavior_parameter_metadata_set no_args_set = {
+@@ -244,6 +249,8 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+                                                               .b = binding->param2 & 0xFF});
+     case RGB_STATUS_CMD:
+         return zmk_rgb_underglow_status();
++    case RGB_ATOG_CMD:
++        return zmk_rgb_underglow_toggle_auto_off();
+     }
+ 
+     return -ENOTSUP;
 diff --git a/app/src/rgb_underglow.c b/app/src/rgb_underglow.c
-index 9af51dc..556305e 100644
+index 9af51dc..615b5c9 100644
 --- a/app/src/rgb_underglow.c
 +++ b/app/src/rgb_underglow.c
 @@ -72,13 +72,13 @@ BUILD_ASSERT(CONFIG_ZMK_RGB_UNDERGLOW_BRT_MIN <= CONFIG_ZMK_RGB_UNDERGLOW_BRT_MA
@@ -36,7 +94,15 @@ index 9af51dc..556305e 100644
      UNDERGLOW_EFFECT_NUMBER // Used to track number of underglow effects
  };
  
-@@ -106,12 +106,6 @@ static const struct device *const ext_power = DEVICE_DT_GET(DT_INST(0, zmk_ext_p
+@@ -99,6 +99,7 @@ static struct led_rgb pixels[STRIP_NUM_PIXELS];
+ static struct led_rgb status_pixels[STRIP_NUM_PIXELS];
+ 
+ static struct rgb_underglow_state state;
++static bool auto_off_enabled = true;
+ 
+ #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_EXT_POWER)
+ static const struct device *const ext_power = DEVICE_DT_GET(DT_INST(0, zmk_ext_power_generic));
+@@ -106,12 +107,6 @@ static const struct device *const ext_power = DEVICE_DT_GET(DT_INST(0, zmk_ext_p
  
  void zmk_rgb_set_ext_power(void);
  
@@ -49,7 +115,7 @@ index 9af51dc..556305e 100644
  static struct zmk_led_hsb hsb_scale_zero_max(struct zmk_led_hsb hsb) {
      hsb.b = hsb.b * CONFIG_ZMK_RGB_UNDERGLOW_BRT_MAX / BRT_MAX;
      return hsb;
-@@ -166,66 +160,87 @@ static struct led_rgb hsb_to_rgb(struct zmk_led_hsb hsb) {
+@@ -166,66 +161,96 @@ static struct led_rgb hsb_to_rgb(struct zmk_led_hsb hsb) {
      return rgb;
  }
  
@@ -110,32 +176,35 @@ index 9af51dc..556305e 100644
 -        hsb.h = state.animation_step;
 -
 -        pixels[i] = hsb_to_rgb(hsb_scale_min_max(hsb));
-+        uint16_t flicker = mood_hash(i * 37 + state.animation_step / 2);
-+        pixels[i] = mood_hsb(flicker % 46, 100, 28 + (flicker % 73));
++        uint8_t position = rgb_pixel_lookup(i);
++        uint8_t row = position < 10   ? 0
++                      : position < 22 ? 1
++                      : position < 34 ? 2
++                      : position < 46 ? 3
++                      : position < 64 ? 4
++                                      : 5;
++        uint8_t flame = mood_triangle(state.animation_step + row * 22, 180);
++        uint16_t variation = mood_hash(i * 37);
++        pixels[i] = mood_hsb(6 + (flame * 28) / 100 + variation % 7, 100,
++                             22 + (flame * 62) / 100 + variation % 9);
      }
-+    state.animation_step += state.animation_speed * 3;
-+}
- 
-+static void zmk_rgb_underglow_effect_mood_pacifica(void) {
-+    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-+        uint8_t wave_a = mood_triangle(i * 7 + state.animation_step, 128);
-+        uint8_t wave_b = mood_triangle(i * 13 + state.animation_step / 2 + 31, 96);
-+        pixels[i] = mood_hsb(185 + (wave_b * 30) / 100, 85,
-+                             18 + (wave_a * 36 + wave_b * 24) / 100);
-+    }
+-
      state.animation_step += state.animation_speed;
 -    state.animation_step = state.animation_step % HUE_MAX;
  }
  
 -static void zmk_rgb_underglow_effect_swirl(void) {
-+static void zmk_rgb_underglow_effect_mood_forest(void) {
++static void zmk_rgb_underglow_effect_mood_pacifica(void) {
++    uint16_t phase = ((uint32_t)state.animation_step * 4) / 5;
      for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
 -        struct zmk_led_hsb hsb = state.color;
 -        hsb.h = (HUE_MAX / STRIP_NUM_PIXELS * i + state.animation_step) % HUE_MAX;
 -
 -        pixels[i] = hsb_to_rgb(hsb_scale_min_max(hsb));
-+        uint8_t wave = mood_triangle(i * 8 + state.animation_step, 140);
-+        pixels[i] = mood_hsb(95 + (wave * 45) / 100, 95, 12 + (wave * 58) / 100);
++        uint8_t wave_a = mood_triangle(i * 7 + phase, 128);
++        uint8_t wave_b = mood_triangle(i * 13 + phase / 2 + 31, 96);
++        pixels[i] = mood_hsb(185 + (wave_b * 30) / 100, 85,
++                             18 + (wave_a * 36 + wave_b * 24) / 100);
      }
 -
 -    state.animation_step += state.animation_speed * 2;
@@ -145,8 +214,7 @@ index 9af51dc..556305e 100644
  
 -static void zmk_rgb_underglow_effect_layer(void) {
 -    bool active = false;
-+static void zmk_rgb_underglow_effect_mood_party(void) {
-+    uint16_t frame = state.animation_step / 8;
++static void zmk_rgb_underglow_effect_mood_forest(void) {
      for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
 -        pixels[i].r -= state.animation_speed < pixels[i].r ? state.animation_speed : pixels[i].r;
 -        pixels[i].g -= state.animation_speed < pixels[i].g ? state.animation_speed : pixels[i].g;
@@ -154,12 +222,19 @@ index 9af51dc..556305e 100644
 -        if (pixels[i].r || pixels[i].g || pixels[i].b) {
 -            active = true;
 -        }
-+        uint16_t sparkle = mood_hash(i * 71 + frame * 131);
-+        uint8_t brightness = (sparkle % 7 == 0) ? 100 : 10 + (sparkle % 16);
-+        pixels[i] = mood_hsb(sparkle % HUE_MAX, 100, brightness);
++        uint8_t wave = mood_triangle(i * 8 + state.animation_step, 140);
++        pixels[i] = mood_hsb(95 + (wave * 45) / 100, 95, 12 + (wave * 58) / 100);
      }
--    state.animation_step += state.animation_speed;
-+    state.animation_step += state.animation_speed * 4;
+     state.animation_step += state.animation_speed;
++}
++
++static void zmk_rgb_underglow_effect_mood_party(void) {
++    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
++        uint8_t wave = mood_triangle(i * 9 + state.animation_step, 120);
++        uint16_t hue = (i * 31 + state.animation_step) % HUE_MAX;
++        pixels[i] = mood_hsb(hue, 100, 45 + (wave * 45) / 100);
++    }
++    state.animation_step += state.animation_speed * 2;
 +}
  
 -    if (state.animation_step > 255 || !active) {
@@ -174,7 +249,7 @@ index 9af51dc..556305e 100644
  }
  
  static int zmk_led_generate_status(void);
-@@ -459,32 +474,29 @@ static int zmk_led_generate_status(void) {
+@@ -459,32 +484,29 @@ static int zmk_led_generate_status(void) {
  }
  #endif // underglow_indicators exists
  
@@ -223,7 +298,29 @@ index 9af51dc..556305e 100644
      }
  
      zmk_led_write_pixels();
-@@ -560,6 +572,10 @@ static int zmk_rgb_underglow_init(void) {
+@@ -527,6 +549,13 @@ static int rgb_settings_set(const char *name, size_t len, settings_read_cb read_
+         return rc;
+     }
+ 
++    if (settings_name_steq(name, "auto_off", &next) && !next) {
++        if (len != sizeof(auto_off_enabled)) {
++            return -EINVAL;
++        }
++        return read_cb(cb_arg, &auto_off_enabled, sizeof(auto_off_enabled));
++    }
++
+     return -ENOENT;
+ }
+ 
+@@ -534,6 +563,7 @@ SETTINGS_STATIC_HANDLER_DEFINE(rgb_underglow, "rgb/underglow", NULL, rgb_setting
+ 
+ static void zmk_rgb_underglow_save_state_work(struct k_work *_work) {
+     settings_save_one("rgb/underglow/state", &state, sizeof(state));
++    settings_save_one("rgb/underglow/auto_off", &auto_off_enabled, sizeof(auto_off_enabled));
+ }
+ 
+ static struct k_work_delayable underglow_save_work;
+@@ -560,6 +590,10 @@ static int zmk_rgb_underglow_init(void) {
          on : IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_ON_START)
      };
  
@@ -234,7 +331,7 @@ index 9af51dc..556305e 100644
  #if IS_ENABLED(CONFIG_SETTINGS)
      k_work_init_delayable(&underglow_save_work, zmk_rgb_underglow_save_state_work);
  #endif
-@@ -633,9 +649,8 @@ void zmk_rgb_set_ext_power(void) {
+@@ -633,9 +667,8 @@ void zmk_rgb_set_ext_power(void) {
  int zmk_rgb_underglow_on(void) {
      zmk_rgb_underglow_transient_on();
  #if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
@@ -246,7 +343,7 @@ index 9af51dc..556305e 100644
  #endif
      return zmk_rgb_underglow_save_state();
  }
-@@ -696,7 +711,7 @@ int zmk_rgb_underglow_select_effect(int effect) {
+@@ -696,7 +729,7 @@ int zmk_rgb_underglow_select_effect(int effect) {
      state.current_effect = effect;
      state.animation_step = 0;
  #if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
@@ -255,7 +352,19 @@ index 9af51dc..556305e 100644
  #endif
      return zmk_rgb_underglow_save_state();
  }
-@@ -779,8 +794,13 @@ static void zmk_rgb_underglow_set_layer(uint8_t layer, bool wakeup) {
+@@ -709,6 +742,11 @@ int zmk_rgb_underglow_toggle(void) {
+     return state.on ? zmk_rgb_underglow_off() : zmk_rgb_underglow_on();
+ }
+ 
++int zmk_rgb_underglow_toggle_auto_off(void) {
++    auto_off_enabled = !auto_off_enabled;
++    return zmk_rgb_underglow_save_state();
++}
++
+ #if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
+ 
+ static struct led_rgb hex_to_rgb(uint8_t r, uint8_t g, uint8_t b) {
+@@ -779,8 +817,13 @@ static void zmk_rgb_underglow_set_layer(uint8_t layer, bool wakeup) {
          LOG_DBG("write pixels");
          zmk_led_write_pixels();
      } else {
@@ -271,3 +380,13 @@ index 9af51dc..556305e 100644
      }
  }
  #endif /* IS_ENABLED(UNDERGLOW_LAYER_ENABLED) */
+@@ -954,6 +997,9 @@ static int rgb_underglow_event_listener(const zmk_event_t *eh) {
+ 
+ #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE)
+     if (as_zmk_activity_state_changed(eh)) {
++        if (!auto_off_enabled) {
++            return 0;
++        }
+         return rgb_underglow_auto_state(zmk_activity_get_state() == ZMK_ACTIVITY_ACTIVE);
+     }
+ #endif
