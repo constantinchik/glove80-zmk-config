@@ -1,0 +1,59 @@
+diff --git a/app/Kconfig b/app/Kconfig
+index 73042f1..c18c470 100644
+--- a/app/Kconfig
++++ b/app/Kconfig
+@@ -333,7 +333,7 @@ config ZMK_RGB_UNDERGLOW_SPD_START
+ 
+ config ZMK_RGB_UNDERGLOW_EFF_START
+     int "RGB underglow start effect int value related to the effect enum list"
+-    range 0 3
++    range 0 4
+ 
+ config ZMK_RGB_UNDERGLOW_ON_START
+     bool "RGB underglow starts on by default"
+diff --git a/app/src/rgb_underglow.c b/app/src/rgb_underglow.c
+index 9af51dc..dfdc4a8 100644
+--- a/app/src/rgb_underglow.c
++++ b/app/src/rgb_underglow.c
+@@ -212,6 +212,11 @@ static void zmk_rgb_underglow_effect_swirl(void) {
+ }
+ 
+ static void zmk_rgb_underglow_effect_layer(void) {
++    if (rgb_underglow_top_layer() == 0) {
++        zmk_rgb_underglow_effect_swirl();
++        return;
++    }
++
+     bool active = false;
+     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+         pixels[i].r -= state.animation_speed < pixels[i].r ? state.animation_speed : pixels[i].r;
+@@ -560,6 +565,10 @@ static int zmk_rgb_underglow_init(void) {
+         on : IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_ON_START)
+     };
+ 
++#if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
++    state.layer_enabled = (state.current_effect == UNDERGLOW_EFFECT_LAYER_INDICATORS);
++#endif
++
+ #if IS_ENABLED(CONFIG_SETTINGS)
+     k_work_init_delayable(&underglow_save_work, zmk_rgb_underglow_save_state_work);
+ #endif
+@@ -778,9 +787,17 @@ static void zmk_rgb_underglow_set_layer(uint8_t layer, bool wakeup) {
+         }
+         LOG_DBG("write pixels");
+         zmk_led_write_pixels();
++    } else if (layer == 0) {
++        if (!state.on) {
++            zmk_rgb_underglow_transient_on();
++        } else {
++            state.animation_step = 0;
++            k_timer_start(&underglow_tick, K_NO_WAIT, K_MSEC(25));
++        }
+     } else {
+-        if (state.on)
++        if (state.on) {
+             zmk_rgb_underglow_transient_off();
++        }
+     }
+ }
+ #endif /* IS_ENABLED(UNDERGLOW_LAYER_ENABLED) */

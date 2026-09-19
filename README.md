@@ -42,18 +42,20 @@ This configuration uses the per-layer RGB implementation from
 [`darknao/zmk`](https://github.com/darknao/zmk), pinned in the build workflow to
 an exact commit for reproducible firmware builds.
 
-- **Base:** lighting off.
+- **Base:** animated rainbow swirl while the layer-indicator mode is active.
 - **Lower:** amber media/numpad keys, cyan navigation keys, and a white layer key.
 - **Magic:** unchanged; no custom layer map is applied to the system layer.
 - **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
-  `W`, `A`, `S`, and `D` on this layer.
+  `W`, `A`, `S`, and `D` on this layer. Escape is red, Space is green, and
+  Control is purple. The physical Grave, Tab, Caps Lock, and Shift keys produce
+  the otherwise missing `5`, `T`, `G`, and `B` keys.
 - **Lower Gaming:** number controls light amber while the physical `E/S/D/F`
   anchors remain cyan.
 
-After flashing, turn RGB on and use the normal Magic-layer RGB effect control to
-cycle to the layer-indicator effect. RGB brightness remains controlled by the
-normal Magic-layer controls. LEDs automatically turn off after 30 seconds of
-idle time to reduce battery drain.
+The layer-indicator effect and RGB power are now the firmware defaults, so a
+configuration reset starts directly in this mode without cycling effects. RGB
+brightness remains controlled by the normal Magic-layer controls. LEDs
+automatically turn off after 30 seconds of idle time to reduce battery drain.
 
 When changing between firmware versions, flash the same combined UF2 to both
 halves and follow MoErgo's configuration reset and re-pair procedure. To roll
