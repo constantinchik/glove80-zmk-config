@@ -1,5 +1,5 @@
 diff --git a/app/Kconfig b/app/Kconfig
-index 73042f1..c18c470 100644
+index 73042f1..13126e6 100644
 --- a/app/Kconfig
 +++ b/app/Kconfig
 @@ -333,7 +333,7 @@ config ZMK_RGB_UNDERGLOW_SPD_START
@@ -7,52 +7,266 @@ index 73042f1..c18c470 100644
  config ZMK_RGB_UNDERGLOW_EFF_START
      int "RGB underglow start effect int value related to the effect enum list"
 -    range 0 3
-+    range 0 4
++    range 0 6
  
  config ZMK_RGB_UNDERGLOW_ON_START
      bool "RGB underglow starts on by default"
 diff --git a/app/src/rgb_underglow.c b/app/src/rgb_underglow.c
-index 9af51dc..dfdc4a8 100644
+index 9af51dc..556305e 100644
 --- a/app/src/rgb_underglow.c
 +++ b/app/src/rgb_underglow.c
-@@ -212,6 +212,11 @@ static void zmk_rgb_underglow_effect_swirl(void) {
+@@ -72,13 +72,13 @@ BUILD_ASSERT(CONFIG_ZMK_RGB_UNDERGLOW_BRT_MIN <= CONFIG_ZMK_RGB_UNDERGLOW_BRT_MA
+              "ERROR: RGB underglow maximum brightness is less than minimum brightness");
+ 
+ enum rgb_underglow_effect {
+-    UNDERGLOW_EFFECT_SOLID,
+-    UNDERGLOW_EFFECT_BREATHE,
+-    UNDERGLOW_EFFECT_SPECTRUM,
+-    UNDERGLOW_EFFECT_SWIRL,
+-#if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
+-    UNDERGLOW_EFFECT_LAYER_INDICATORS,
+-#endif
++    UNDERGLOW_EFFECT_MOOD_OFF,
++    UNDERGLOW_EFFECT_MOOD_AURORA,
++    UNDERGLOW_EFFECT_MOOD_FIRE,
++    UNDERGLOW_EFFECT_MOOD_PACIFICA,
++    UNDERGLOW_EFFECT_MOOD_FOREST,
++    UNDERGLOW_EFFECT_MOOD_PARTY,
++    UNDERGLOW_EFFECT_MOOD_COLORLOOP,
+     UNDERGLOW_EFFECT_NUMBER // Used to track number of underglow effects
+ };
+ 
+@@ -106,12 +106,6 @@ static const struct device *const ext_power = DEVICE_DT_GET(DT_INST(0, zmk_ext_p
+ 
+ void zmk_rgb_set_ext_power(void);
+ 
+-static struct zmk_led_hsb hsb_scale_min_max(struct zmk_led_hsb hsb) {
+-    hsb.b = CONFIG_ZMK_RGB_UNDERGLOW_BRT_MIN +
+-            (CONFIG_ZMK_RGB_UNDERGLOW_BRT_MAX - CONFIG_ZMK_RGB_UNDERGLOW_BRT_MIN) * hsb.b / BRT_MAX;
+-    return hsb;
+-}
+-
+ static struct zmk_led_hsb hsb_scale_zero_max(struct zmk_led_hsb hsb) {
+     hsb.b = hsb.b * CONFIG_ZMK_RGB_UNDERGLOW_BRT_MAX / BRT_MAX;
+     return hsb;
+@@ -166,66 +160,87 @@ static struct led_rgb hsb_to_rgb(struct zmk_led_hsb hsb) {
+     return rgb;
  }
  
- static void zmk_rgb_underglow_effect_layer(void) {
-+    if (rgb_underglow_top_layer() == 0) {
-+        zmk_rgb_underglow_effect_swirl();
-+        return;
-+    }
-+
-     bool active = false;
+-static void zmk_rgb_underglow_effect_solid(void) {
+-    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+-        pixels[i] = hsb_to_rgb(hsb_scale_min_max(state.color));
++static uint8_t mood_triangle(uint16_t value, uint16_t period) {
++    uint16_t half = period / 2;
++    value %= period;
++    if (value > half) {
++        value = period - value;
+     }
++    return (value * 100) / half;
+ }
+ 
+-static void zmk_rgb_underglow_effect_breathe(void) {
+-    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+-        struct zmk_led_hsb hsb = state.color;
+-        hsb.b = abs(state.animation_step - 1200) / 12;
++static uint16_t mood_hash(uint16_t value) {
++    value ^= value << 7;
++    value ^= value >> 9;
++    value *= 109;
++    return value ^ (value >> 8);
++}
+ 
+-        pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
+-    }
++static struct led_rgb mood_hsb(uint16_t hue, uint8_t saturation, uint8_t brightness) {
++    struct zmk_led_hsb hsb = {
++        .h = hue % HUE_MAX,
++        .s = saturation,
++        .b = (brightness * state.color.b) / BRT_MAX,
++    };
++    return hsb_to_rgb(hsb_scale_zero_max(hsb));
++}
+ 
+-    state.animation_step += state.animation_speed * 10;
++static void zmk_rgb_underglow_effect_mood_off(void) {
++    memset(pixels, 0, sizeof(pixels));
++}
+ 
+-    if (state.animation_step > 2400) {
+-        state.animation_step = 0;
++static void zmk_rgb_underglow_effect_mood_aurora(void) {
++    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
++        uint8_t wave = mood_triangle(i * 11 + state.animation_step, 120);
++        uint16_t hue = 135 + ((i * 9 + state.animation_step / 2) % 155);
++        pixels[i] = mood_hsb(hue, 90, 20 + (wave * 60) / 100);
+     }
++    state.animation_step += state.animation_speed;
+ }
+ 
+-static void zmk_rgb_underglow_effect_spectrum(void) {
++static void zmk_rgb_underglow_effect_mood_fire(void) {
      for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-         pixels[i].r -= state.animation_speed < pixels[i].r ? state.animation_speed : pixels[i].r;
-@@ -560,6 +565,10 @@ static int zmk_rgb_underglow_init(void) {
+-        struct zmk_led_hsb hsb = state.color;
+-        hsb.h = state.animation_step;
+-
+-        pixels[i] = hsb_to_rgb(hsb_scale_min_max(hsb));
++        uint16_t flicker = mood_hash(i * 37 + state.animation_step / 2);
++        pixels[i] = mood_hsb(flicker % 46, 100, 28 + (flicker % 73));
+     }
++    state.animation_step += state.animation_speed * 3;
++}
+ 
++static void zmk_rgb_underglow_effect_mood_pacifica(void) {
++    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
++        uint8_t wave_a = mood_triangle(i * 7 + state.animation_step, 128);
++        uint8_t wave_b = mood_triangle(i * 13 + state.animation_step / 2 + 31, 96);
++        pixels[i] = mood_hsb(185 + (wave_b * 30) / 100, 85,
++                             18 + (wave_a * 36 + wave_b * 24) / 100);
++    }
+     state.animation_step += state.animation_speed;
+-    state.animation_step = state.animation_step % HUE_MAX;
+ }
+ 
+-static void zmk_rgb_underglow_effect_swirl(void) {
++static void zmk_rgb_underglow_effect_mood_forest(void) {
+     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+-        struct zmk_led_hsb hsb = state.color;
+-        hsb.h = (HUE_MAX / STRIP_NUM_PIXELS * i + state.animation_step) % HUE_MAX;
+-
+-        pixels[i] = hsb_to_rgb(hsb_scale_min_max(hsb));
++        uint8_t wave = mood_triangle(i * 8 + state.animation_step, 140);
++        pixels[i] = mood_hsb(95 + (wave * 45) / 100, 95, 12 + (wave * 58) / 100);
+     }
+-
+-    state.animation_step += state.animation_speed * 2;
+-    state.animation_step = state.animation_step % HUE_MAX;
++    state.animation_step += state.animation_speed;
+ }
+ 
+-static void zmk_rgb_underglow_effect_layer(void) {
+-    bool active = false;
++static void zmk_rgb_underglow_effect_mood_party(void) {
++    uint16_t frame = state.animation_step / 8;
+     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+-        pixels[i].r -= state.animation_speed < pixels[i].r ? state.animation_speed : pixels[i].r;
+-        pixels[i].g -= state.animation_speed < pixels[i].g ? state.animation_speed : pixels[i].g;
+-        pixels[i].b -= state.animation_speed < pixels[i].b ? state.animation_speed : pixels[i].b;
+-        if (pixels[i].r || pixels[i].g || pixels[i].b) {
+-            active = true;
+-        }
++        uint16_t sparkle = mood_hash(i * 71 + frame * 131);
++        uint8_t brightness = (sparkle % 7 == 0) ? 100 : 10 + (sparkle % 16);
++        pixels[i] = mood_hsb(sparkle % HUE_MAX, 100, brightness);
+     }
+-    state.animation_step += state.animation_speed;
++    state.animation_step += state.animation_speed * 4;
++}
+ 
+-    if (state.animation_step > 255 || !active) {
+-        zmk_rgb_underglow_transient_off();
++static void zmk_rgb_underglow_effect_mood_colorloop(void) {
++    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
++        uint16_t stripe = (i / 4) * 48;
++        uint8_t wave = mood_triangle(i * 10 + state.animation_step, 100);
++        pixels[i] = mood_hsb(stripe + state.animation_step, 100, 35 + (wave * 55) / 100);
+     }
++    state.animation_step += state.animation_speed * 2;
+ }
+ 
+ static int zmk_led_generate_status(void);
+@@ -459,32 +474,29 @@ static int zmk_led_generate_status(void) {
+ }
+ #endif // underglow_indicators exists
+ 
+-static inline struct led_rgb hue_sat(int hue, int sat) {
+-    struct zmk_led_hsb hsb = state.color;
+-    hsb.h = hue;
+-    hsb.s = sat;
+-    return hsb_to_rgb(hsb_scale_min_max(hsb));
+-}
+-
+ static void zmk_rgb_underglow_tick(struct k_work *work) {
+     switch (state.current_effect) {
+-    case UNDERGLOW_EFFECT_SOLID:
+-        zmk_rgb_underglow_effect_solid();
++    case UNDERGLOW_EFFECT_MOOD_OFF:
++        zmk_rgb_underglow_effect_mood_off();
+         break;
+-    case UNDERGLOW_EFFECT_BREATHE:
+-        zmk_rgb_underglow_effect_breathe();
++    case UNDERGLOW_EFFECT_MOOD_AURORA:
++        zmk_rgb_underglow_effect_mood_aurora();
+         break;
+-    case UNDERGLOW_EFFECT_SPECTRUM:
+-        zmk_rgb_underglow_effect_spectrum();
++    case UNDERGLOW_EFFECT_MOOD_FIRE:
++        zmk_rgb_underglow_effect_mood_fire();
+         break;
+-    case UNDERGLOW_EFFECT_SWIRL:
+-        zmk_rgb_underglow_effect_swirl();
++    case UNDERGLOW_EFFECT_MOOD_PACIFICA:
++        zmk_rgb_underglow_effect_mood_pacifica();
+         break;
+-#if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
+-    case UNDERGLOW_EFFECT_LAYER_INDICATORS:
+-        zmk_rgb_underglow_effect_layer();
++    case UNDERGLOW_EFFECT_MOOD_FOREST:
++        zmk_rgb_underglow_effect_mood_forest();
++        break;
++    case UNDERGLOW_EFFECT_MOOD_PARTY:
++        zmk_rgb_underglow_effect_mood_party();
++        break;
++    case UNDERGLOW_EFFECT_MOOD_COLORLOOP:
++        zmk_rgb_underglow_effect_mood_colorloop();
+         break;
+-#endif
+     }
+ 
+     zmk_led_write_pixels();
+@@ -560,6 +572,10 @@ static int zmk_rgb_underglow_init(void) {
          on : IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_ON_START)
      };
  
 +#if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
-+    state.layer_enabled = (state.current_effect == UNDERGLOW_EFFECT_LAYER_INDICATORS);
++    state.layer_enabled = state.on;
 +#endif
 +
  #if IS_ENABLED(CONFIG_SETTINGS)
      k_work_init_delayable(&underglow_save_work, zmk_rgb_underglow_save_state_work);
  #endif
-@@ -778,9 +787,17 @@ static void zmk_rgb_underglow_set_layer(uint8_t layer, bool wakeup) {
-         }
+@@ -633,9 +649,8 @@ void zmk_rgb_set_ext_power(void) {
+ int zmk_rgb_underglow_on(void) {
+     zmk_rgb_underglow_transient_on();
+ #if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
+-    if (state.current_effect == UNDERGLOW_EFFECT_LAYER_INDICATORS) {
+-        state.layer_enabled = true;
+-    }
++    state.layer_enabled = true;
++    zmk_rgb_underglow_set_layer(rgb_underglow_top_layer(), true);
+ #endif
+     return zmk_rgb_underglow_save_state();
+ }
+@@ -696,7 +711,7 @@ int zmk_rgb_underglow_select_effect(int effect) {
+     state.current_effect = effect;
+     state.animation_step = 0;
+ #if IS_ENABLED(UNDERGLOW_LAYER_ENABLED)
+-    state.layer_enabled = (effect == UNDERGLOW_EFFECT_LAYER_INDICATORS);
++    zmk_rgb_underglow_set_layer(rgb_underglow_top_layer(), true);
+ #endif
+     return zmk_rgb_underglow_save_state();
+ }
+@@ -779,8 +794,13 @@ static void zmk_rgb_underglow_set_layer(uint8_t layer, bool wakeup) {
          LOG_DBG("write pixels");
          zmk_led_write_pixels();
-+    } else if (layer == 0) {
+     } else {
+-        if (state.on)
+-            zmk_rgb_underglow_transient_off();
++        // Layers without an RGB map inherit the selected Base mood.
 +        if (!state.on) {
 +            zmk_rgb_underglow_transient_on();
 +        } else {
 +            state.animation_step = 0;
 +            k_timer_start(&underglow_tick, K_NO_WAIT, K_MSEC(25));
-+        }
-     } else {
--        if (state.on)
-+        if (state.on) {
-             zmk_rgb_underglow_transient_off();
 +        }
      }
  }
