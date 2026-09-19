@@ -42,10 +42,11 @@ This configuration uses the per-layer RGB implementation from
 [`darknao/zmk`](https://github.com/darknao/zmk), pinned in the build workflow to
 an exact commit for reproducible firmware builds.
 
-- **Base:** `Magic+G` cycles through Off, Aurora, Fire, Pacifica, Forest, Party,
+- **Base:** `Magic+G` cycles through Aurora, Fire, Pacifica, Forest, Party,
   Colorloop/Stripe Flow, and Ukrainian Flag. Fire uses smooth rising heat noise,
-  Forest runs at two-thirds speed, and the flag gently waves/breathes. The
-  selected mood is saved across power cycles.
+  Forest runs at two-thirds speed, Colorloop runs at half speed, and the flag
+  has a pronounced wave/breathing range. The selected mood is saved across
+  power cycles. `Magic+T` remains the single way to toggle RGB power.
 - **Lower:** amber media controls, blue navigation, cyan numpad keys, and a white layer key.
 - **Magic:** no custom layer map; existing system controls remain, with `Magic+I` added for idle auto-off.
 - **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
@@ -55,14 +56,15 @@ an exact commit for reproducible firmware builds.
 - **Lower Gaming:** the separate left-side number cluster is amber and the
   right-side numpad follows the same semantic colors as Lower.
 
-On both Lower layers, only the right-side numpad is cyan; keypad Enter is green,
-keypad Equals is white, and Print Screen is red. Lower navigation is blue, while
-the separate left-side Lower-Gaming number cluster remains orange.
+On both Lower layers, only numpad digits are cyan. Num Lock is purple, arithmetic
+operators are yellow, Decimal is pink, keypad Enter is green, keypad Equals is
+white, and Print Screen is red. Lower navigation is blue, while the separate
+left-side Lower-Gaming number cluster remains orange.
 
 Aurora and RGB power are the firmware defaults after a configuration reset.
 Layer indicators are independent of the selected Base mood: Gaming and Lower
-Gaming always use the same functional colors, including when Base is set to
-Off. RGB brightness remains controlled by the normal Magic-layer controls.
+Gaming always use the same functional colors. RGB brightness remains controlled
+by the normal Magic-layer controls.
 LEDs automatically turn off after 30 seconds of idle time to reduce battery
 drain. `Magic+I` toggles this idle auto-off behavior, and the preference is
 saved across power cycles. The regular RGB power toggle remains separate.

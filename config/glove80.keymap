@@ -78,11 +78,11 @@
         lower_rgb {
             bindings = <
     &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                                  &ug ORANGE &ug ORANGE &ug ORANGE &ug ___    &ug ORANGE
-    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug WHITE  &ug CYAN   &ug CYAN   &ug RED
-    &ug ___    &ug ___    &ug ___    &ug BLUE   &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE
-    &ug ___    &ug ___    &ug BLUE   &ug BLUE   &ug BLUE   &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ___
+    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ORANGE                                                   &ug ORANGE &ug PURPLE &ug WHITE  &ug YELLOW &ug YELLOW &ug RED
+    &ug ___    &ug ___    &ug ___    &ug BLUE   &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ORANGE
+    &ug ___    &ug ___    &ug BLUE   &ug BLUE   &ug BLUE   &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ___
     &ug ___    &ug ORANGE &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ___ &ug ___ &ug WHITE  &ug ___ &ug ___ &ug ___ &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
-    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE            &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___            &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
+    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE            &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___            &ug CYAN   &ug CYAN   &ug PINK   &ug GREEN &ug ___
             >;
             layer-id = <1>;
         };
@@ -104,11 +104,11 @@
         lower_gaming_rgb {
             bindings = <
     &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                                  &ug ORANGE &ug ORANGE &ug ORANGE &ug ___    &ug ORANGE
-    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___                                                      &ug ORANGE &ug CYAN   &ug WHITE  &ug CYAN   &ug CYAN   &ug RED
-    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE
-    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ___
+    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___                                                      &ug ORANGE &ug PURPLE &ug WHITE  &ug YELLOW &ug YELLOW &ug RED
+    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ORANGE
+    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ___
     &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ___ &ug ___ &ug ___ &ug WHITE  &ug ___ &ug ___ &ug ___ &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
-    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE         &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___         &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
+    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE         &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___         &ug CYAN   &ug CYAN   &ug PINK   &ug GREEN &ug ___
             >;
             layer-id = <4>;
         };
