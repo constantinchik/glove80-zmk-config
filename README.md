@@ -35,3 +35,26 @@ To locate your firmware files and reflash your Glove80...
 6. Flash the firmware to Glove80 according to the user documentation on the official Glove80 Glove80 Support website (linked above)
 
 Your keyboard is now ready to use.
+
+## Layer-aware RGB indicators
+
+This configuration uses the per-layer RGB implementation from
+[`darknao/zmk`](https://github.com/darknao/zmk), pinned in the build workflow to
+an exact commit for reproducible firmware builds.
+
+- **Base:** lighting off.
+- **Lower:** amber media/numpad keys, cyan navigation keys, and a white layer key.
+- **Magic:** unchanged; no custom layer map is applied to the system layer.
+- **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
+  `W`, `A`, `S`, and `D` on this layer.
+- **Lower Gaming:** number controls light amber while the physical `E/S/D/F`
+  anchors remain cyan.
+
+After flashing, turn RGB on and use the normal Magic-layer RGB effect control to
+cycle to the layer-indicator effect. RGB brightness remains controlled by the
+normal Magic-layer controls. LEDs automatically turn off after 30 seconds of
+idle time to reduce battery drain.
+
+When changing between firmware versions, flash the same combined UF2 to both
+halves and follow MoErgo's configuration reset and re-pair procedure. To roll
+back, build and flash both halves from known-good commit `07e08a5`.
