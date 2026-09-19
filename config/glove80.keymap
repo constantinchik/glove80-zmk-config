@@ -79,8 +79,8 @@
             bindings = <
     &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                                  &ug ORANGE &ug ORANGE &ug ORANGE &ug ___    &ug ORANGE
     &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug WHITE  &ug CYAN   &ug CYAN   &ug RED
-    &ug ___    &ug ___    &ug ___    &ug CYAN   &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE
-    &ug ___    &ug ___    &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ___
+    &ug ___    &ug ___    &ug ___    &ug BLUE   &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE
+    &ug ___    &ug ___    &ug BLUE   &ug BLUE   &ug BLUE   &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ___
     &ug ___    &ug ORANGE &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ___ &ug ___ &ug WHITE  &ug ___ &ug ___ &ug ___ &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
     &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE            &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___            &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
             >;
@@ -105,8 +105,8 @@
             bindings = <
     &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                                  &ug ORANGE &ug ORANGE &ug ORANGE &ug ___    &ug ORANGE
     &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___                                                      &ug ORANGE &ug CYAN   &ug WHITE  &ug CYAN   &ug CYAN   &ug RED
-    &ug ___    &ug ___    &ug ORANGE &ug CYAN   &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE
-    &ug ___    &ug ___    &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ___
+    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ORANGE
+    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug CYAN   &ug ___
     &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ___ &ug ___ &ug ___ &ug WHITE  &ug ___ &ug ___ &ug ___ &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
     &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE         &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___         &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
             >;

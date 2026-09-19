@@ -43,18 +43,21 @@ This configuration uses the per-layer RGB implementation from
 an exact commit for reproducible firmware builds.
 
 - **Base:** `Magic+G` cycles through Off, Aurora, Fire, Pacifica, Forest, Party,
-  and Colorloop/Stripe Flow. The selected mood is saved across power cycles.
-- **Lower:** amber media controls, cyan navigation/numpad keys, and a white layer key.
+  Colorloop/Stripe Flow, and Ukrainian Flag. Fire uses smooth rising heat noise,
+  Forest runs at two-thirds speed, and the flag gently waves/breathes. The
+  selected mood is saved across power cycles.
+- **Lower:** amber media controls, blue navigation, cyan numpad keys, and a white layer key.
 - **Magic:** no custom layer map; existing system controls remain, with `Magic+I` added for idle auto-off.
 - **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
   `W`, `A`, `S`, and `D` on this layer. Escape is red, Space is green, and
   Control is purple. The physical Grave, Tab, Caps Lock, and Shift keys produce
   the otherwise missing `5`, `T`, `G`, and `B` keys.
-- **Lower Gaming:** number controls light amber while the physical `E/S/D/F`
-  anchors remain cyan.
+- **Lower Gaming:** the separate left-side number cluster is amber and the
+  right-side numpad follows the same semantic colors as Lower.
 
-On both Lower layers, the right-side numpad is cyan, keypad Enter is green,
-keypad Equals is white, and Print Screen is red.
+On both Lower layers, only the right-side numpad is cyan; keypad Enter is green,
+keypad Equals is white, and Print Screen is red. Lower navigation is blue, while
+the separate left-side Lower-Gaming number cluster remains orange.
 
 Aurora and RGB power are the firmware defaults after a configuration reset.
 Layer indicators are independent of the selected Base mood: Gaming and Lower
