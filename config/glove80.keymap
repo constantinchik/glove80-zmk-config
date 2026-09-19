@@ -18,6 +18,9 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/rgb_colors.h>
+
+#define CYAN 0x00ffff
 
 /* On demand includes */
 
@@ -66,6 +69,53 @@
 #endif
 
 /* Custom Device-tree */
+
+/ {
+    underglow-layer {
+        compatible = "zmk,underglow-layer";
+
+        /* Navigation, media, and numpad guidance. */
+        lower_rgb {
+            bindings = <
+    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                                  &ug ORANGE &ug ORANGE &ug ORANGE &ug ___    &ug ORANGE
+    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ORANGE                                                   &ug ORANGE &ug PURPLE &ug WHITE  &ug YELLOW &ug YELLOW &ug RED
+    &ug ___    &ug ___    &ug ___    &ug BLUE   &ug ___    &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ORANGE
+    &ug ___    &ug ___    &ug BLUE   &ug BLUE   &ug BLUE   &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ___
+    &ug ___    &ug ORANGE &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ___ &ug ___ &ug WHITE  &ug ___ &ug ___ &ug ___ &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
+    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE            &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___            &ug CYAN   &ug CYAN   &ug PINK   &ug GREEN &ug ___
+            >;
+            layer-id = <1>;
+        };
+
+        /* Physical E/S/D/F emit W/A/S/D on the Gaming layer. */
+        gaming_rgb {
+            bindings = <
+    &ug ___ &ug ___ &ug ___  &ug ___  &ug ___                                                                  &ug ___ &ug ___ &ug ___ &ug ___ &ug ___
+    &ug ___ &ug RED &ug ___  &ug ___  &ug ___  &ug ___                                                   &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___
+    &ug ___ &ug ___ &ug ___  &ug CYAN &ug ___  &ug ___                                                   &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___
+    &ug ___ &ug ___ &ug CYAN &ug CYAN &ug CYAN &ug ___                                                   &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___
+    &ug ___ &ug PURPLE &ug ___  &ug ___  &ug ___  &ug ___ &ug RED &ug RED &ug ___  &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___ &ug ___
+    &ug ___ &ug ___ &ug ___  &ug ___  &ug ___          &ug GREEN &ug ___ &ug ___  &ug ___ &ug ___ &ug GREEN         &ug ___ &ug ___ &ug ___ &ug ___ &ug ___
+            >;
+            layer-id = <3>;
+        };
+
+        /* Gaming number layer: cyan anchors plus amber number controls. */
+        lower_gaming_rgb {
+            bindings = <
+    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                                  &ug ORANGE &ug ORANGE &ug ORANGE &ug ___    &ug ORANGE
+    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___    &ug ___                                                      &ug ORANGE &ug PURPLE &ug WHITE  &ug YELLOW &ug YELLOW &ug RED
+    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ORANGE
+    &ug ___    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE                                                   &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug YELLOW &ug ___
+    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE &ug ___ &ug ___ &ug ___ &ug WHITE  &ug ___ &ug ___ &ug ___ &ug ORANGE &ug CYAN   &ug CYAN   &ug CYAN   &ug GREEN &ug ___
+    &ug ___    &ug ORANGE &ug ORANGE &ug ORANGE &ug ORANGE         &ug ___ &ug ___ &ug ___    &ug ___ &ug ___ &ug ___         &ug CYAN   &ug CYAN   &ug PINK   &ug GREEN &ug ___
+            >;
+            layer-id = <4>;
+        };
+    };
+};
+
+/* Base and Magic intentionally have no custom RGB map. Magic remains system-default. */
 
 
 /* Input Listeners */
@@ -348,7 +398,7 @@
         layer_Magic {
             bindings = <
   &bt BT_CLR            &none            &none            &none            &none                                                                                  &none   &none   &none   &none  &bt BT_CLR_ALL
-       &none            &none            &none            &none            &none            &none                                                         &none   &none   &none   &none   &none           &none
+       &none            &none            &none            &none            &none            &none                                                         &none   &none   &rgb_ug RGB_ATOG   &none   &none           &none
        &none  &rgb_ug RGB_SPI  &rgb_ug RGB_SAI  &rgb_ug RGB_HUI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG                                                         &none   &none   &none   &none   &none           &none
  &bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF                                                         &none   &none   &none   &none   &none     &bootloader
   &sys_reset            &none            &none            &none            &none            &none   &bt_2   &bt_3         &none   &none   &none   &none   &none   &none   &none   &none   &none      &sys_reset
@@ -359,10 +409,10 @@
         layer_Gaming {
             bindings = <
      &none      &none   &none   &none   &none                                                                            &none      &none      &none      &none      &none
-   &kp ESC    &kp ESC  &kp N1  &kp N2  &kp N3  &kp N4                                                          &none     &none      &none      &none      &none      &none
-   &kp TAB    &kp TAB   &kp Q   &kp W   &kp E   &kp R                                                          &kp Y     &kp U      &kp I      &kp O      &kp P   &kp BSLH
- &kp LSHFT  &kp LSHFT   &kp A   &kp S   &kp D   &kp F                                                          &kp H     &kp J      &kp K      &kp L   &kp SEMI    &kp SQT
- &kp LCTRL  &kp LCTRL   &kp Z   &kp X   &kp C   &kp V    &kp ESC  &kp ESC  &glower  &tog 3   &none  &kp RSHFT   &kp N     &kp M  &kp COMMA    &kp DOT   &kp FSLH  &kp RSHFT
+    &kp N5    &kp ESC  &kp N1  &kp N2  &kp N3  &kp N4                                                          &none     &none      &none      &none      &none      &none
+     &kp T    &kp TAB   &kp Q   &kp W   &kp E   &kp R                                                          &kp Y     &kp U      &kp I      &kp O      &kp P   &kp BSLH
+     &kp G  &kp LSHFT   &kp A   &kp S   &kp D   &kp F                                                          &kp H     &kp J      &kp K      &kp L   &kp SEMI    &kp SQT
+     &kp B  &kp LCTRL   &kp Z   &kp X   &kp C   &kp V    &kp ESC  &kp ESC  &glower  &tog 3   &none  &kp RSHFT   &kp N     &kp M  &kp COMMA    &kp DOT   &kp FSLH  &kp RSHFT
      &none      &none   &none   &none   &none          &kp SPACE  &kp RET   &none   &none   &none  &kp SPACE          &kp LBKT   &kp RBKT  &kp MINUS  &kp EQUAL    &kp DEL
             >;
         };
