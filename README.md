@@ -44,9 +44,10 @@ an exact commit for reproducible firmware builds.
 
 - **Base:** `Magic+G` cycles through Aurora, Fire, Pacifica, Forest, Party,
   Colorloop/Stripe Flow, and Ukrainian Flag. Fire uses smooth rising heat noise,
-  Forest runs at two-thirds speed, Colorloop runs at half speed, and the flag
-  has a pronounced wave/breathing range. The selected mood is saved across
-  power cycles. `Magic+T` remains the single way to toggle RGB power.
+  Forest runs at two-thirds speed, Colorloop runs at one-quarter of its original
+  speed, and the flag has a slow, pronounced wave/breathing range. The selected
+  mood is saved across power cycles. `Magic+T` remains the single way to toggle
+  RGB power.
 - **Lower:** amber media controls, blue navigation, cyan numpad keys, and a white layer key.
 - **Magic:** no custom layer map; existing system controls remain, with `Magic+I` added for idle auto-off.
 - **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
