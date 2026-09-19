@@ -1,75 +1,123 @@
-# MoErgo Glove80 Custom Configuration for ZMK
+# Constantine’s Glove80 Firmware
 
 ![MoErgo Logo](moergo_logo.png)
 
-This repo is the official ZMK configuration of the MoErgo Glove80 wireless split contoured keyboard. Use it to develop your own keymap and easily build your own ZMK firmware to run on your Glove80.
+Custom ZMK firmware for Constantine’s Glove80. It preserves the five-layer ergonomic keymap while adding layer-aware per-key indicators, seven animated RGB moods, Gaming-specific guidance, and persistent lighting controls.
 
-**NOTE: You can also customize the layout of your Glove80 keyboard with the Glove80 Layout Editor webapp. For most users Glove80 Layout Editor is the recommended and simpler option. More information is available at the official MoErgo Glove80 Support site (see resources below).**
+## Highlights
 
-These steps will get you using your keymap on your keyboard in the fastest time possible. It uses the GitHub Actions feature to build your firmware online.
+- Per-key RGB indicators for Lower, Gaming, and Lower Gaming.
+- Seven Base-layer moods inspired by the WLED presets used at home.
+- The selected mood and idle auto-off preference persist across power cycles.
+- Gaming indicators stay identical regardless of the selected Base mood.
+- A combined UF2 is built automatically by GitHub Actions for both halves.
+- Firmware dependencies are pinned for reproducible builds.
 
-If you are looking to dig deeper into ZMK and develop new functionality, it is recommended to follow the steps of installing ZMK as found on the official ZMK documentation site (linked below).
+## RGB controls
 
-## Resources
-- The [official MoErgo Glove80 Support](https://moergo.com/glove80-support) web site. Glove80 documentation and other technical resources.
-- The [official MoErgo Discord Server](https://moergo.com/discord). Instant conversations with other Glove80 users.
+| Shortcut | Action |
+|---|---|
+| `Magic+G` | Cycle Aurora → Fire → Pacifica → Forest → Party → Colorloop/Stripe Flow → Ukrainian Flag |
+| `Magic+T` | Toggle RGB power |
+| `Magic+I` | Toggle the 30-second idle auto-off preference |
 
-- The [official ZMK Documentation](https://zmk.dev/docs) web site. Find the answers to many of your questions about ZMK Firmware.
-- The [official ZMK Discord Server](https://discord.gg/8cfMkQksSB). Instant conversations with other ZMK developers and users. Great technical resource!
+Aurora and RGB power are the reset-time defaults. There is deliberately no Off entry in the mood cycle; use `Magic+T` to turn lighting off.
 
-- The [official Glove80 ZMK Distribution](https://github.com/moergo-sc/zmk). Repositiory for ZMK firmware customized for Glove80. 
- 
-## Instructions
-1. Log into, or sign up for, your personal GitHub account.
-2. Create your own repository using this repository as a template ([instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)) and check it out on your local computer.
-3. Edit the keymap file(s) to suit your needs
-4. Commit and push your changes to your personal repo. Upon pushing it, GitHub Actions will start building a new version of your firmware with the updated keymap.
+### Base moods
 
-## Firmware Files
-To locate your firmware files and reflash your Glove80...
-1. log into GitHub and navigate to your personal config repository you just uploaded your keymap changes to.
-2. Click "Actions" in the main navigation, and in the left navigation click the "Build" link.
-3. Select the desired workflow run in the centre area of the page (based on date and time of the build you wish to use). You can also start a new build from this page by clicking the "Run workflow" button.
-4. After clicking the desired workflow run, you should be presented with a section at the bottom of the page called "Artifacts". This section contains the results of your build, in a file called "glove80.uf2"
-5. Download the glove80.uf2
-6. Flash the firmware to Glove80 according to the user documentation on the official Glove80 Glove80 Support website (linked above)
+- **Aurora:** slow cyan/green/purple waves.
+- **Fire:** smooth WLED-inspired 2D heat field with independent flame columns, hot lower rows, and cooler rising tongues.
+- **Pacifica:** slow layered blue/cyan waves.
+- **Forest:** slow green movement at two-thirds of the original animation speed.
+- **Party:** continuous saturated multicolor motion without flashing sparkles.
+- **Colorloop / Stripe Flow:** flowing rainbow stripes at one-quarter of the original speed.
+- **Ukrainian Flag:** blue upper half and yellow lower half with a slow, visible wave/breathing effect.
 
-Your keyboard is now ready to use.
+## Layers
 
-## Layer-aware RGB indicators
+### Base
 
-This configuration uses the per-layer RGB implementation from
-[`darknao/zmk`](https://github.com/darknao/zmk), pinned in the build workflow to
-an exact commit for reproducible firmware builds.
+The normal typing layer. It displays the selected animated mood.
 
-- **Base:** `Magic+G` cycles through Aurora, Fire, Pacifica, Forest, Party,
-  Colorloop/Stripe Flow, and Ukrainian Flag. Fire uses smooth rising heat noise,
-  Forest runs at two-thirds speed, Colorloop runs at one-quarter of its original
-  speed, and the flag has a slow, pronounced wave/breathing range. The selected
-  mood is saved across power cycles. `Magic+T` remains the single way to toggle
-  RGB power.
-- **Lower:** amber media controls, blue navigation, cyan numpad keys, and a white layer key.
-- **Magic:** no custom layer map; existing system controls remain, with `Magic+I` added for idle auto-off.
-- **Gaming:** the physical `E`, `S`, `D`, and `F` keys light cyan because they emit
-  `W`, `A`, `S`, and `D` on this layer. Escape is red, Space is green, and
-  Control is purple. The physical Grave, Tab, Caps Lock, and Shift keys produce
-  the otherwise missing `5`, `T`, `G`, and `B` keys.
-- **Lower Gaming:** the separate left-side number cluster is amber and the
-  right-side numpad follows the same semantic colors as Lower.
+### Lower
 
-On both Lower layers, only numpad digits are cyan. Num Lock is purple, arithmetic
-operators are yellow, Decimal is pink, keypad Enter is green, keypad Equals is
-white, and Print Screen is red. Lower navigation is blue, while the separate
-left-side Lower-Gaming number cluster remains orange.
+Functional color guidance:
 
-Aurora and RGB power are the firmware defaults after a configuration reset.
-Layer indicators are independent of the selected Base mood: Gaming and Lower
-Gaming always use the same functional colors. RGB brightness remains controlled
-by the normal Magic-layer controls.
-LEDs automatically turn off after 30 seconds of idle time to reduce battery
-drain. `Magic+I` toggles this idle auto-off behavior, and the preference is
-saved across power cycles. The regular RGB power toggle remains separate.
+- Media and utility controls: orange
+- Navigation arrows: blue
+- Numpad digits, including both zero keys: cyan
+- Num Lock: purple
+- Divide, Multiply, Minus, and Plus: yellow
+- Decimal: pink
+- Keypad Enter: green
+- Keypad Equals: white
+- Print Screen: red
+- Layer key: white
 
-When changing between firmware versions, flash the same combined UF2 to both
-halves and follow MoErgo's configuration reset and re-pair procedure. To roll
-back, build and flash both halves from known-good commit `07e08a5`.
+### Magic
+
+Retains the existing system controls and has no custom per-layer RGB map. `Magic+I` is the only added binding, used for the persistent idle auto-off toggle.
+
+### Gaming
+
+The physical `E/S/D/F` keys emit `W/A/S/D` and light cyan. Escape is red, Space is green, and Control is purple.
+
+The shifted left edge restores occasionally needed keys:
+
+- Grave position → `5`
+- Tab position → `T`
+- Caps Lock position → `G`
+- Left Shift position → `B`
+
+### Lower Gaming
+
+The separate left-side number cluster is orange. The right-side numpad uses the same semantic colors as Lower. Gaming’s normal functional indicators are restored when returning to Gaming.
+
+## Build and flash
+
+Every push runs [`.github/workflows/build.yml`](.github/workflows/build.yml). A successful run publishes a `glove80.uf2` artifact.
+
+1. Open the repository’s **Actions** tab.
+2. Select the latest successful **Build** run.
+3. Download the `glove80.uf2` artifact.
+4. Flash the same combined UF2 to **both** Glove80 halves using the official [MoErgo firmware-loading instructions](https://docs.moergo.com/glove80-user-guide/customizing-key-layout/).
+5. Test Base moods, all layers, idle/wake, power cycling, and both halves.
+
+A configuration reset is normally unnecessary for an ordinary upgrade. Use it only when testing reset-time defaults or recovering stale settings; it clears stored preferences and may require Bluetooth re-pairing.
+
+## Implementation
+
+This repository intentionally owns only the configuration and a small source patch:
+
+- [`config/glove80.keymap`](config/glove80.keymap): five layers, Gaming remaps, Magic controls, and 80-entry RGB maps.
+- [`config/glove80.conf`](config/glove80.conf): RGB enablement, reset defaults, and 30-second idle timeout.
+- [`patches/default-layer-effect.patch`](patches/default-layer-effect.patch): mood engine, layer-map composition, effect cycling, and persistent idle auto-off toggle.
+- [`.github/workflows/build.yml`](.github/workflows/build.yml): checks out and patches the pinned firmware source, then builds the combined UF2.
+
+The build uses [`darknao/zmk`](https://github.com/darknao/zmk) pinned to commit `8aeaaa66fbb4b94948c8763e06f1920ab0b69480`. The workflow applies the repository-owned patch with `git apply`, so an incompatible upstream change fails loudly rather than silently changing behavior.
+
+### Important invariants
+
+When changing this firmware:
+
+- Preserve all five layers unless a remap is explicitly requested.
+- Keep every RGB layer map at exactly 80 bindings.
+- Author RGB maps in keymap-position order; the firmware resolves physical LEDs through the board pixel lookup.
+- Keep Base moods independent from static layer maps.
+- Keep Gaming styling identical across every mood.
+- Append new effects instead of renumbering existing saved moods.
+- Keep RGB power and idle auto-off as separate controls.
+- Pin firmware sources to exact commits.
+- Build in GitHub Actions and flash/test both halves before merging.
+
+## Rollback
+
+- Last stock-keymap rollback point: commit `07e08a5`.
+- To roll back, build that commit and flash its combined UF2 to both halves.
+- Keep a known-good UF2 available before testing firmware changes.
+
+## References
+
+- [Glove80 documentation](https://docs.moergo.com/glove80-user-guide/)
+- [MoErgo support](https://moergo.com/glove80-support)
+- [ZMK documentation](https://zmk.dev/docs)
