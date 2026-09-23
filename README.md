@@ -31,7 +31,7 @@ Aurora and RGB power are the reset-time defaults. There is deliberately no Off e
 - **Forest:** slow green movement at two-thirds of the original animation speed.
 - **Party:** continuous saturated multicolor motion without flashing sparkles.
 - **Colorloop / Stripe Flow:** flowing rainbow stripes at one-quarter of the original speed.
-- **Ukrainian Flag:** blue upper half and yellow lower half with a slow, visible wave/breathing effect.
+- **Ukrainian Flag:** blue upper half and yellow lower half with a slow, visible wave/breathing effect. Its per-effect brightness is capped to reduce the sustained two-channel LED load on USB/KVM and battery; this is a candidate mitigation for typing failures specific to this mood and still needs physical verification.
 
 ## Layers
 
