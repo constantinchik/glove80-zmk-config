@@ -289,7 +289,7 @@ index 9af51dc8..7d98c9c9 100644
 +    struct zmk_led_hsb hsb = {
 +        .h = hue,
 +        .s = 100,
-+        .b = (brightness * MIN(state.color.b, 16)) / BRT_MAX,
++        .b = (brightness * MIN(state.color.b, 32)) / BRT_MAX,
 +    };
 +    return hsb_to_rgb(hsb_scale_zero_max(hsb));
 +}
