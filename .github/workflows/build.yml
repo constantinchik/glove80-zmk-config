@@ -17,6 +17,8 @@ jobs:
           path: src
       - name: Apply Glove80 RGB defaults and base animation patch
         run: git -C src apply ../patches/default-layer-effect.patch
+      - name: Check Ukrainian Flag power envelope
+        run: python3 tests/test_flag_power.py src/app/src/rgb_underglow.c
       - uses: cachix/install-nix-action@v25
         with:
           nix_path: nixpkgs=channel:nixos-22.05
