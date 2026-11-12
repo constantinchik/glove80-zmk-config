@@ -288,10 +288,10 @@ index 9af51dc..7d33d52 100644
 +    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
 +        uint8_t row, column;
 +        mood_key_position(rgb_pixel_lookup(i), &row, &column);
-+        uint8_t wave = mood_triangle(column * 7 + phase, 180);
-+        uint8_t brightness = 55 + (wave * 45) / 100;
-+        pixels[i] = row < 3 ? mood_hsb(211, 100, brightness)
-+                            : mood_hsb(50, 100, MIN(brightness + 8, 100));
++        uint8_t wave = mood_triangle(column * 20 + phase, 180);
++        // Two crests across 18 columns keep total LED load flat over time.
++        pixels[i] = row < 3 ? mood_hsb(211, 100, 50 + (wave * 40) / 100)
++                            : mood_hsb(50, 100, 35 + (wave * 40) / 100);
      }
 +    state.animation_step += state.animation_speed;
  }
