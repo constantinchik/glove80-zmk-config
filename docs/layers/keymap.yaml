@@ -1,0 +1,407 @@
+layout: {zmk_keyboard: glove80}
+layers:
+  Base:
+  - F1
+  - F2
+  - F3
+  - F4
+  - F5
+  - F6
+  - F7
+  - F8
+  - F9
+  - F10
+  - '`'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '0'
+  - '-'
+  - TAB
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - \
+  - CAPS
+  - A
+  - S
+  - D
+  - F
+  - G
+  - H
+  - J
+  - K
+  - L
+  - ;
+  - ''''
+  - LSHFT
+  - Z
+  - X
+  - C
+  - V
+  - B
+  - LSHFT
+  - ESC
+  - Lower
+  - {t: Gaming, h: toggle}
+  - RCTRL
+  - RSHFT
+  - N
+  - M
+  - ','
+  - .
+  - /
+  - RSHFT
+  - {t: RGB info, h: Magic}
+  - LCTRL
+  - LGUI
+  - UP
+  - DOWN
+  - BSPC
+  - LCTRL
+  - LGUI
+  - LALT
+  - RET
+  - SPACE
+  - '['
+  - ']'
+  - '-'
+  - '='
+  - DEL
+  Lower:
+  - BRI DN
+  - BRI UP
+  - PREV
+  - NEXT
+  - PP
+  - MUTE
+  - VOL DN
+  - VOL UP
+  - ''
+  - PAUSE BREAK
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - ''
+  - ''
+  - HOME
+  - (
+  - KP NUM
+  - KP EQUAL
+  - KP SLASH
+  - KP MULTIPLY
+  - PRINTSCREEN
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - UP ARROW
+  - ''
+  - END
+  - )
+  - KP 7
+  - KP 8
+  - KP 9
+  - KP MINUS
+  - SCROLLLOCK
+  - {t: ▽, type: trans}
+  - ''
+  - LEFT ARROW
+  - DOWN ARROW
+  - RIGHT ARROW
+  - PG UP
+  - '%'
+  - KP 4
+  - KP 5
+  - KP 6
+  - KP PLUS
+  - ''
+  - {t: ▽, type: trans}
+  - APP
+  - ''
+  - F11
+  - F12
+  - PG DN
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Lower
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ','
+  - KP 1
+  - KP 2
+  - KP 3
+  - KP ENTER
+  - {t: ▽, type: trans}
+  - {t: RGB info, h: Magic}
+  - CAPS
+  - INS
+  - F11
+  - F12
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - KP 0
+  - KP 0
+  - KP DOT
+  - KP ENTER
+  - {t: ▽, type: trans}
+  Magic:
+  - BT CLR
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - BT CLR ALL
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - RGB ATOG
+  - ''
+  - ''
+  - ''
+  - ''
+  - RGB SPI
+  - RGB SAI
+  - RGB HUI
+  - RGB BRI
+  - RGB TOG
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Boot
+  - RGB SPD
+  - RGB SAD
+  - RGB HUD
+  - RGB BRD
+  - RGB EFF
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Boot
+  - Reset
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - BT 2
+  - BT 3
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Reset
+  - {type: held}
+  - ''
+  - ''
+  - ''
+  - ''
+  - BT 0
+  - BT 1
+  - OUT USB
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  Gaming:
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - '5'
+  - ESC
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - T
+  - TAB
+  - Q
+  - W
+  - E
+  - R
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - \
+  - G
+  - LSHFT
+  - A
+  - S
+  - D
+  - F
+  - H
+  - J
+  - K
+  - L
+  - ;
+  - ''''
+  - B
+  - LCTRL
+  - Z
+  - X
+  - C
+  - V
+  - ESC
+  - ESC
+  - G-Lower
+  - {t: Gaming, h: toggle}
+  - ''
+  - RSHFT
+  - N
+  - M
+  - ','
+  - .
+  - /
+  - RSHFT
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - SPACE
+  - RET
+  - ''
+  - ''
+  - ''
+  - SPACE
+  - '['
+  - ']'
+  - '-'
+  - '='
+  - DEL
+  Lower_Gaming:
+  - BRI DN
+  - BRI UP
+  - PREV
+  - NEXT
+  - PP
+  - MUTE
+  - VOL DN
+  - VOL UP
+  - ''
+  - PAUSE BREAK
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - (
+  - KP NUM
+  - KP EQUAL
+  - KP SLASH
+  - KP MULTIPLY
+  - PRINTSCREEN
+  - {t: ▽, type: trans}
+  - ''
+  - '7'
+  - '8'
+  - '9'
+  - +
+  - )
+  - KP 7
+  - KP 8
+  - KP 9
+  - KP MINUS
+  - SCROLLLOCK
+  - {t: ▽, type: trans}
+  - ''
+  - '4'
+  - '5'
+  - '6'
+  - '-'
+  - '%'
+  - KP 4
+  - KP 5
+  - KP 6
+  - KP PLUS
+  - ''
+  - {t: ▽, type: trans}
+  - APP
+  - '1'
+  - '2'
+  - '3'
+  - ''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Lower
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ','
+  - KP 1
+  - KP 2
+  - KP 3
+  - KP ENTER
+  - {t: ▽, type: trans}
+  - {t: RGB info, h: Magic}
+  - CAPS
+  - INS
+  - F11
+  - F12
+  - BSPC
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - RET
+  - SPACE
+  - KP 0
+  - KP 0
+  - KP DOT
+  - KP ENTER
+  - {t: ▽, type: trans}
