@@ -1,139 +1,158 @@
-# Constantine’s Glove80 Firmware
+# Glove80 RGB Moods
 
-![MoErgo Logo](moergo_logo.png)
+**Animated RGB lighting and per-key layer indicators for the MoErgo Glove80, built on ZMK.**
 
-Custom ZMK firmware for Constantine’s Glove80. It preserves the five-layer ergonomic keymap while adding layer-aware per-key indicators, seven animated RGB moods, Gaming-specific guidance, and persistent lighting controls.
+Stock Glove80 firmware gives you a handful of basic underglow effects. This firmware adds a small animation engine: seven full-keyboard moods that run on your typing layer, plus per-key color maps that light up each extra layer's keys while you hold it. Every animation has been flashed and tested on a real Glove80, on both halves.
 
-## Highlights
+[**⬇ Download the latest firmware**](https://github.com/constantinchik/glove80-zmk-config/releases/latest) · [What's included](#features) · [Make it yours](#make-it-yours)
 
-- Per-key RGB indicators for Lower, Gaming, and Lower Gaming.
-- Seven Base-layer moods inspired by the WLED presets used at home.
-- The selected mood and idle auto-off preference persist across power cycles.
-- Gaming indicators stay identical regardless of the selected Base mood.
-- A combined UF2 is built automatically by GitHub Actions for both halves.
-- Firmware dependencies are pinned for reproducible builds.
+> If this is useful to you, please ⭐ **star the repo**. It helps other Glove80 owners find it.
+
+## Features
+
+- **Seven animated moods** on the base layer: Aurora, Fire, Pacifica, Forest, Party, Colorloop, and Ukrainian Flag. Cycle them with one shortcut.
+- **Per-key layer indicators.** Hold a layer and only the keys that matter light up, color-coded by what they do: arrows, numpad, media, and so on.
+- **Moods and indicators work together.** Layers without a color map keep showing the current mood, so the lighting never cuts out when you switch layers.
+- **Your settings stick.** The selected mood and the idle auto-off preference survive power cycles.
+- **Gentle on the hardware.** Each mood keeps its total LED load in the same range as the others, so heavy lighting doesn't make typing lag.
+- **Built by CI, nothing to install.** GitHub Actions builds one combined UF2 for both halves from pinned sources. Every build is reproducible.
+
+## Install
+
+1. Download `glove80.uf2` from the [latest release](https://github.com/constantinchik/glove80-zmk-config/releases/latest).
+2. Keep your current firmware file so you can roll back.
+3. Flash the **same file to both halves** using MoErgo's [firmware-loading instructions](https://docs.moergo.com/glove80-user-guide/customizing-key-layout/).
+
+You don't need a configuration reset to upgrade. A reset clears saved preferences and may require Bluetooth re-pairing, so use it only to recover from bad settings.
+
+The release firmware includes the keymap shown [below](#layers). To use your own keymap, see [Make it yours](#make-it-yours).
 
 ## RGB controls
 
 | Shortcut | Action |
 |---|---|
-| `Magic+G` | Cycle Aurora → Fire → Pacifica → Forest → Party → Colorloop/Stripe Flow → Ukrainian Flag |
-| `Magic+T` | Toggle RGB power |
-| `Magic+I` | Toggle the 30-second idle auto-off preference |
+| `Magic` + `G` | Next mood: Aurora → Fire → Pacifica → Forest → Party → Colorloop → Ukrainian Flag |
+| `Magic` + `T` | Lighting on or off |
+| `Magic` + `I` | Turn the 30-second idle auto-off on or off |
 
-Aurora and RGB power are the reset-time defaults. There is deliberately no Off entry in the mood cycle; use `Magic+T` to turn lighting off.
+The standard Magic-layer brightness and speed controls work on every mood. Each mood sets its own colors, so the hue and saturation controls don't change it. Aurora is the default after a reset. The cycle has no "off" mood; use `Magic` + `T` instead.
 
-### Base moods
+### Moods
 
-- **Aurora:** slow cyan/green/purple waves.
-- **Fire:** smooth WLED-inspired 2D heat field with independent flame columns, hot lower rows, and cooler rising tongues.
-- **Pacifica:** slow layered blue/cyan waves.
-- **Forest:** slow green movement at two-thirds of the original animation speed.
-- **Party:** continuous saturated multicolor motion without flashing sparkles.
-- **Colorloop / Stripe Flow:** flowing rainbow stripes at one-quarter of the original speed.
-- **Ukrainian Flag:** blue upper half and yellow lower half with a slow wave that moves across the board in two crests. Blue runs brighter (50–90%) than yellow (35–75%) so both read evenly on the LEDs. Because the crests are spread out, the total LED load stays flat instead of the whole board pulsing at once, keeping its power draw in line with the other moods.
+| Mood | Look |
+|---|---|
+| **Aurora** | Slow cyan, green, and purple waves |
+| **Fire** | A 2D heat field with independent flame columns: hot at the bottom rows, cooler tongues rising |
+| **Pacifica** | Layered blue and cyan ocean waves |
+| **Forest** | Slow drifting greens |
+| **Party** | Continuous saturated multicolor motion, with no flashing sparkles |
+| **Colorloop** | Flowing rainbow stripes |
+| **Ukrainian Flag** | Blue top rows over yellow bottom rows, with a wave moving across the board |
+
+Several moods are inspired by [WLED](https://kno.wled.ge/) effects.
 
 ## Layers
 
-▽ marks a transparent key, which falls through to the layer below. The images are drawn with [keymap-drawer](https://github.com/caksoylar/keymap-drawer) by the **Draw keymap** workflow, which redraws them whenever `config/glove80.keymap` changes.
+The keymap has five layers. ▽ marks a transparent key, which falls through to the layer below. The images are redrawn by CI with [keymap-drawer](https://github.com/caksoylar/keymap-drawer) whenever the keymap changes.
 
 ### Base
 
 ![Base layer](docs/layers/base.svg)
 
-The normal typing layer. It displays the selected animated mood.
+The typing layer. It shows the selected mood.
 
 ### Lower
 
 ![Lower layer](docs/layers/lower.svg)
 
-Functional color guidance:
+Media keys, navigation, and a full numpad, color-coded:
 
-- Media and utility controls: orange
-- Navigation arrows: blue
-- Numpad digits, including both zero keys: cyan
-- Num Lock: purple
-- Divide, Multiply, Minus, and Plus: yellow
-- Decimal: pink
-- Keypad Enter: green
-- Keypad Equals: white
-- Print Screen: red
-- Layer key: white
+| Color | Keys |
+|---|---|
+| Orange | Media and utility controls |
+| Blue | Arrow keys |
+| Cyan | Numpad digits |
+| Purple | Num Lock |
+| Yellow | Divide, multiply, minus, plus |
+| Pink | Decimal point |
+| Green | Keypad Enter |
+| White | Keypad Equals, layer key |
+| Red | Print Screen |
 
 ### Magic
 
 ![Magic layer](docs/layers/magic.svg)
 
-Retains the existing system controls and has no custom per-layer RGB map. `Magic+I` is the only added binding, used for the persistent idle auto-off toggle.
+The standard Glove80 system layer: Bluetooth profiles, RGB controls, bootloader, and reset. It has no color map, so the mood keeps running.
 
 ### Gaming
 
 ![Gaming layer](docs/layers/gaming.svg)
 
-The physical `E/S/D/F` keys emit `W/A/S/D` and light cyan. Escape is red, Space is green, and Control is purple.
-
-The shifted left edge restores occasionally needed keys:
-
-- Grave position → `5`
-- Tab position → `T`
-- Caps Lock position → `G`
-- Left Shift position → `B`
+Toggled from the right thumb cluster. The left side is shifted one column right, so your fingers rest on WASD at the usual home-row position. WASD lights cyan, Escape red, Space green, and Control purple. The outer column gives you `5`, `T`, `G`, and `B`.
 
 ### Lower Gaming
 
 ![Lower Gaming layer](docs/layers/lower-gaming.svg)
 
-The separate left-side number cluster is orange. The right-side numpad uses the same semantic colors as Lower. Gaming’s normal functional indicators are restored when returning to Gaming.
+While gaming, hold the G-Lower thumb key (double-tap to lock it) to get a left-hand number cluster (orange) and the right-hand numpad, using the same colors as Lower.
 
-## Build and flash
+## Make it yours
 
-Tested firmware is published on the [**Releases**](https://github.com/constantinchik/glove80-zmk-config/releases) page. Download `glove80.uf2` from the latest release.
+The whole firmware lives in a few files, and GitHub builds it for you.
 
-To try an unreleased change instead: every push runs [`.github/workflows/build.yml`](.github/workflows/build.yml), and a successful run publishes a `glove80.uf2` artifact. Open the **Actions** tab, select the latest successful **Build** run for the branch, and download the artifact.
+1. **Fork** this repository.
+2. **Edit your keymap** in [`config/glove80.keymap`](config/glove80.keymap). You can design it in the [Glove80 Layout Editor](https://my.glove80.com/) and paste the exported keymap in. Keep the `underglow-layer` block if you want per-key indicators.
+3. **Push.** GitHub Actions builds `glove80.uf2`. Download it from the run's artifacts on the **Actions** tab, then flash it to both halves.
 
-Then:
+### Color your own layers
 
-1. Keep the previous UF2 so you can roll back.
-2. Flash the same combined UF2 to **both** Glove80 halves using the official [MoErgo firmware-loading instructions](https://docs.moergo.com/glove80-user-guide/customizing-key-layout/).
-3. Test Base moods, all layers, idle/wake, power cycling, and both halves. With each mood on, type on both halves to confirm they stay responsive.
+Per-key color maps live in the `underglow-layer` block of the keymap. Each map lists exactly 80 colors in key-position order, plus the layer it belongs to:
 
-A configuration reset is normally unnecessary for an ordinary upgrade. Use it only when testing reset-time defaults or recovering stale settings; it clears stored preferences and may require Bluetooth re-pairing.
+```dts
+gaming_rgb {
+    bindings = <
+        &ug ___ &ug RED &ug ___ /* … 80 entries in total … */
+    >;
+    layer-id = <3>;
+};
+```
 
-## Implementation
+`___` leaves a key dark. Color names come from ZMK's `rgb_colors.h`, and you can `#define` your own as hex values (for example `#define CYAN 0x00ffff`). Layers without a map show the current mood.
 
-This repository intentionally owns only the configuration and a small source patch:
+### Add or change a mood
 
-- [`config/glove80.keymap`](config/glove80.keymap): five layers, Gaming remaps, Magic controls, and 80-entry RGB maps.
-- [`config/glove80.conf`](config/glove80.conf): RGB enablement, reset defaults, and 30-second idle timeout.
-- [`patches/default-layer-effect.patch`](patches/default-layer-effect.patch): mood engine, layer-map composition, effect cycling, and persistent idle auto-off toggle.
-- [`.github/workflows/build.yml`](.github/workflows/build.yml): checks out and patches the pinned firmware source, then builds the combined UF2.
-- [`.github/workflows/draw.yml`](.github/workflows/draw.yml) and [`keymap_drawer.config.yaml`](keymap_drawer.config.yaml): redraw the layer images in [`docs/layers`](docs/layers) whenever the keymap changes, and commit them back to the branch.
+Moods are plain C functions in [`patches/default-layer-effect.patch`](patches/default-layer-effect.patch), applied to ZMK at build time. Each tick, a mood sets a color for every LED. Use the existing moods as templates, add the new one at the end of the effect list so saved settings keep working, and offset its brightness wave per key or per column so the whole board never brightens at once.
 
-The build uses [`darknao/zmk`](https://github.com/darknao/zmk) pinned to commit `8aeaaa66fbb4b94948c8763e06f1920ab0b69480`. The workflow applies the repository-owned patch with `git apply`, so an incompatible upstream change fails loudly rather than silently changing behavior.
+## How it works
 
-### Important invariants
+- [`config/glove80.keymap`](config/glove80.keymap): the five layers and the per-key color maps.
+- [`config/glove80.conf`](config/glove80.conf): RGB on at startup, default mood, and the 30-second idle timeout.
+- [`patches/default-layer-effect.patch`](patches/default-layer-effect.patch): the mood engine, how moods and layer maps are combined, mood cycling, and the persistent idle toggle.
+- [`.github/workflows/build.yml`](.github/workflows/build.yml): checks out the ZMK source, applies the patch, and builds the combined UF2.
+- [`.github/workflows/draw.yml`](.github/workflows/draw.yml) and [`keymap_drawer.config.yaml`](keymap_drawer.config.yaml): redraw the layer images in [`docs/layers`](docs/layers).
 
-When changing this firmware:
+Builds use [darknao's ZMK fork](https://github.com/darknao/zmk) with per-layer RGB support, pinned to commit `8aeaaa66fbb4b94948c8763e06f1920ab0b69480`. The patch is applied with `git apply`, so an incompatible upstream change fails the build instead of quietly changing behavior.
 
-- Preserve all five layers unless a remap is explicitly requested.
-- Keep every RGB layer map at exactly 80 bindings.
-- Author RGB maps in keymap-position order; the firmware resolves physical LEDs through the board pixel lookup.
-- Keep Base moods independent from static layer maps.
-- Keep Gaming styling identical across every mood.
-- Append new effects instead of renumbering existing saved moods.
+The `build.sh`, `build.bat`, and `Dockerfile` scripts come from MoErgo's template. They build stock MoErgo ZMK without this patch, so use GitHub Actions to build this firmware.
+
+### Rules for contributors
+
+- Keep every RGB layer map at exactly 80 entries, in key-position order.
+- Keep moods independent from layer maps, and Gaming colors the same under every mood.
+- Add new moods at the end of the list; never renumber existing ones.
+- Keep each mood's total LED load in line with the others.
 - Keep RGB power and idle auto-off as separate controls.
 - Pin firmware sources to exact commits.
-- Keep each mood's total LED load in line with the others: offset waves per key or column so the whole board never brightens at once.
-- Build in GitHub Actions and flash/test both halves before merging.
+- Flash and test on both halves before merging.
 
-## Rollback
+## Credits
 
-- Last stock-keymap rollback point: commit `07e08a5`.
-- To roll back, flash the UF2 from an earlier [release](https://github.com/constantinchik/glove80-zmk-config/releases), or build that commit and flash its combined UF2, to both halves.
-- Keep a known-good UF2 available before testing firmware changes.
+- [MoErgo](https://www.moergo.com/) for the Glove80 and the original [config template](https://github.com/moergo-sc/glove80-zmk-config)
+- [ZMK](https://zmk.dev/) and [darknao/zmk](https://github.com/darknao/zmk) for per-layer RGB
+- [WLED](https://kno.wled.ge/) for mood inspiration
+- [keymap-drawer](https://github.com/caksoylar/keymap-drawer) for the layer images
 
-## References
+This is a community project, not affiliated with or supported by MoErgo. Flash at your own risk and keep a known-good firmware file for rollback.
 
-- [Glove80 documentation](https://docs.moergo.com/glove80-user-guide/)
-- [MoErgo support](https://moergo.com/glove80-support)
-- [ZMK documentation](https://zmk.dev/docs)
+If these moods made your Glove80 a little more fun, a ⭐ goes a long way.
