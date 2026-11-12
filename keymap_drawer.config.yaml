@@ -1,0 +1,14 @@
+# keymap-drawer settings for the layer images in docs/layers.
+# The Draw keymap workflow regenerates them whenever the keymap changes.
+parse_config:
+  # Readable labels for custom behaviors that keymap-drawer can't name itself.
+  raw_binding_map:
+    "&lower": Lower
+    "&glower": G-Lower
+    "&rgb_ug_status_macro": RGB info
+    "&bt_0": BT 0
+    "&bt_1": BT 1
+    "&bt_2": BT 2
+    "&bt_3": BT 3
+    "&bootloader": Boot
+    "&sys_reset": Reset

@@ -35,11 +35,17 @@ Aurora and RGB power are the reset-time defaults. There is deliberately no Off e
 
 ## Layers
 
+▽ marks a transparent key, which falls through to the layer below. The images are drawn with [keymap-drawer](https://github.com/caksoylar/keymap-drawer) by the **Draw keymap** workflow, which redraws them whenever `config/glove80.keymap` changes.
+
 ### Base
+
+![Base layer](docs/layers/base.svg)
 
 The normal typing layer. It displays the selected animated mood.
 
 ### Lower
+
+![Lower layer](docs/layers/lower.svg)
 
 Functional color guidance:
 
@@ -56,9 +62,13 @@ Functional color guidance:
 
 ### Magic
 
+![Magic layer](docs/layers/magic.svg)
+
 Retains the existing system controls and has no custom per-layer RGB map. `Magic+I` is the only added binding, used for the persistent idle auto-off toggle.
 
 ### Gaming
+
+![Gaming layer](docs/layers/gaming.svg)
 
 The physical `E/S/D/F` keys emit `W/A/S/D` and light cyan. Escape is red, Space is green, and Control is purple.
 
@@ -70,6 +80,8 @@ The shifted left edge restores occasionally needed keys:
 - Left Shift position → `B`
 
 ### Lower Gaming
+
+![Lower Gaming layer](docs/layers/lower-gaming.svg)
 
 The separate left-side number cluster is orange. The right-side numpad uses the same semantic colors as Lower. Gaming’s normal functional indicators are restored when returning to Gaming.
 
@@ -95,6 +107,7 @@ This repository intentionally owns only the configuration and a small source pat
 - [`config/glove80.conf`](config/glove80.conf): RGB enablement, reset defaults, and 30-second idle timeout.
 - [`patches/default-layer-effect.patch`](patches/default-layer-effect.patch): mood engine, layer-map composition, effect cycling, and persistent idle auto-off toggle.
 - [`.github/workflows/build.yml`](.github/workflows/build.yml): checks out and patches the pinned firmware source, then builds the combined UF2.
+- [`.github/workflows/draw.yml`](.github/workflows/draw.yml) and [`keymap_drawer.config.yaml`](keymap_drawer.config.yaml): redraw the layer images in [`docs/layers`](docs/layers) whenever the keymap changes, and commit them back to the branch.
 
 The build uses [`darknao/zmk`](https://github.com/darknao/zmk) pinned to commit `8aeaaa66fbb4b94948c8763e06f1920ab0b69480`. The workflow applies the repository-owned patch with `git apply`, so an incompatible upstream change fails loudly rather than silently changing behavior.
 

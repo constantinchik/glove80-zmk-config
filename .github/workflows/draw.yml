@@ -1,0 +1,44 @@
+name: Draw keymap
+
+on:
+  push:
+    paths:
+      - config/glove80.keymap
+      - keymap_drawer.config.yaml
+      - .github/workflows/draw.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install keymap-drawer
+        run: pip install keymap-drawer==0.23.0
+      - name: Draw one image per layer
+        run: |
+          mkdir -p docs/layers
+          keymap -c keymap_drawer.config.yaml parse -z config/glove80.keymap > docs/layers/keymap.yaml
+          python -c "import yaml; print('\n'.join(yaml.safe_load(open('docs/layers/keymap.yaml'))['layers']))" |
+          while read -r layer; do
+            name=$(echo "$layer" | tr 'A-Z_' 'a-z-')
+            keymap -c keymap_drawer.config.yaml draw docs/layers/keymap.yaml -s "$layer" > "docs/layers/$name.svg"
+          done
+          ls -la docs/layers
+      - name: Commit updated images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/layers
+          if git diff --cached --quiet; then
+            echo "Layer images are up to date."
+          else
+            git commit -m "docs: redraw keymap layer images [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
