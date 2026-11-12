@@ -31,7 +31,7 @@ Aurora and RGB power are the reset-time defaults. There is deliberately no Off e
 - **Forest:** slow green movement at two-thirds of the original animation speed.
 - **Party:** continuous saturated multicolor motion without flashing sparkles.
 - **Colorloop / Stripe Flow:** flowing rainbow stripes at one-quarter of the original speed.
-- **Ukrainian Flag:** blue upper half and yellow lower half with a slow, visible wave/breathing effect.
+- **Ukrainian Flag:** blue upper half and yellow lower half with a slow wave that moves across the board in two crests. Blue runs brighter (50–90%) than yellow (35–75%) so both read evenly on the LEDs. Because the crests are spread out, the total LED load stays flat instead of the whole board pulsing at once, keeping its power draw in line with the other moods.
 
 ## Layers
 
@@ -75,13 +75,15 @@ The separate left-side number cluster is orange. The right-side numpad uses the 
 
 ## Build and flash
 
-Every push runs [`.github/workflows/build.yml`](.github/workflows/build.yml). A successful run publishes a `glove80.uf2` artifact.
+Tested firmware is published on the [**Releases**](https://github.com/constantinchik/glove80-zmk-config/releases) page. Download `glove80.uf2` from the latest release.
 
-1. Open the repository’s **Actions** tab.
-2. Select the latest successful **Build** run.
-3. Download the `glove80.uf2` artifact.
-4. Flash the same combined UF2 to **both** Glove80 halves using the official [MoErgo firmware-loading instructions](https://docs.moergo.com/glove80-user-guide/customizing-key-layout/).
-5. Test Base moods, all layers, idle/wake, power cycling, and both halves.
+To try an unreleased change instead: every push runs [`.github/workflows/build.yml`](.github/workflows/build.yml), and a successful run publishes a `glove80.uf2` artifact. Open the **Actions** tab, select the latest successful **Build** run for the branch, and download the artifact.
+
+Then:
+
+1. Keep the previous UF2 so you can roll back.
+2. Flash the same combined UF2 to **both** Glove80 halves using the official [MoErgo firmware-loading instructions](https://docs.moergo.com/glove80-user-guide/customizing-key-layout/).
+3. Test Base moods, all layers, idle/wake, power cycling, and both halves. With each mood on, type on both halves to confirm they stay responsive.
 
 A configuration reset is normally unnecessary for an ordinary upgrade. Use it only when testing reset-time defaults or recovering stale settings; it clears stored preferences and may require Bluetooth re-pairing.
 
@@ -108,12 +110,13 @@ When changing this firmware:
 - Append new effects instead of renumbering existing saved moods.
 - Keep RGB power and idle auto-off as separate controls.
 - Pin firmware sources to exact commits.
+- Keep each mood's total LED load in line with the others: offset waves per key or column so the whole board never brightens at once.
 - Build in GitHub Actions and flash/test both halves before merging.
 
 ## Rollback
 
 - Last stock-keymap rollback point: commit `07e08a5`.
-- To roll back, build that commit and flash its combined UF2 to both halves.
+- To roll back, flash the UF2 from an earlier [release](https://github.com/constantinchik/glove80-zmk-config/releases), or build that commit and flash its combined UF2, to both halves.
 - Keep a known-good UF2 available before testing firmware changes.
 
 ## References
